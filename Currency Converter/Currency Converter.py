@@ -1,13 +1,29 @@
-with open('CurrentData.txt') as f :
+with open('CurrentData.txt') as f:
     lines = f.readlines()
 
 currencyDict = {}
 for line in lines:
     parsed = line.split("\t")
-    currencyDict[parsed[0]] = parsed[1]
+    currency = parsed[0]
+    rate = parsed[1].strip().split()[0]  # Extract the numeric part from the conversion rate
+    currencyDict[currency] = float(rate)
 
-amount = int(input("Enter the name of the amount: \n"))
-print("Enter the currency you want to convert this amount to ? Available options")
+amount = float(input("Enter the amount: \n"))
+print("Enter the currency you want to convert this amount from? Available options:")
 [print(item) for item in currencyDict.keys()]
-currency = input("Please enter one of these values : ")
-print(f"{amount} INR is equal to {amount*float(currencyDict[currency])} {currency} (Updated on 30th January, 2023)")
+from_currency = input("Please enter one of these values: ")
+
+if from_currency not in currencyDict:
+    print("Invalid currency.")
+    exit()
+
+print("Enter the currency you want to convert this amount to? Available options:")
+[print(item) for item in currencyDict.keys()]
+to_currency = input("Please enter one of these values: ")
+
+if to_currency not in currencyDict:
+    print("Invalid currency.")
+    exit()
+
+converted_amount = amount * (currencyDict[to_currency] / currencyDict[from_currency])
+print(f"{amount} {from_currency} is equal to {converted_amount} {to_currency} (Updated on 30th January, 2023)")
